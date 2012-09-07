@@ -1,0 +1,61 @@
+<apex:page showHeader="false">
+  <apex:stylesheet value="{!URLFOR($Resource.Bootstrap, '/css/bootstrap.min.css')}" />
+  <apex:stylesheet value="{!URLFOR($Resource.Bootstrap, '/css/bootstrap-responsive.min.css')}" />
+  <apex:includeScript value="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.8.0/jquery.min.js" />
+  <apex:includeScript value="{!URLFOR($Resource.Bootstrap, '/js/bootstrap.min.js')}" />
+  
+  <c:fbookLoginRedirector loginUrl="https://login.salesforce.com/services/auth/sso/00DE0000000cu10MAA/fb_auth_test?site=https%3A%2F%2Ftstachl-fbook-developer-edition.na9.force.com%2F"
+        retUrl="https://www.facebook.com/pages/Stachl-Testing-Page/159957404030861?sk=app_241179819338794" />
+  
+  <div class="container-fluid">
+    <div class="row-fluid">
+      <div class="span12 hero-unit">
+        <h1>Facebook Authentication Test</h1>
+        <p>This application is meant to show a standardized way of integrate Salesforce.com Sites with Facebook as a Page Tab.</p>
+      </div>
+    </div>
+    <div class="row-fluid">
+      <div class="span12">
+        <h2>User Information using Visualforce</h2>
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th colspan="2">General Information</th>
+            </tr>
+            <tr>
+              <th>Field</th>
+              <th>Value</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th>Full Name</th>
+              <td>{!$User.FirstName} {!$User.LastName}</td>
+            </tr>
+            <tr>
+              <th>First Name</th>
+              <td>{!$User.FirstName}</td>
+            </tr>
+            <tr>
+              <th>Last Name</th>
+              <td>{!$User.LastName}</td>
+            </tr>
+            <tr>
+              <th>Is Authenticated</th>
+              <td>{!IF(NOT(CONTAINS($User.LastName, 'Site Guest User')), 'True', 'False')}</td>
+            </tr>
+            <tr>
+              <th>Site OriginalUrl</th>
+              <td>{!$Site.OriginalUrl}</td>
+            </tr>
+            <tr>
+              <th>Site Domain</th>
+              <td>{!$Site.Domain}</td>
+            </tr>
+          </tbody>
+        </table>
+        <p>Here is a Visualforce way to determine if a user is logged in: <code>&#123;!IF(NOT(CONTAINS($User.LastName, 'Site Guest User')), True, False)&#125;</code></p>
+      </div>
+    </div>
+  </div>
+</apex:page>

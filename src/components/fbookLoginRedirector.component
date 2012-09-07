@@ -1,0 +1,52 @@
+<apex:component >
+  <apex:attribute name="loginUrl" type="string" required="true" description="Auth. Providers Single Sign-On Initialization URL" />
+  <apex:attribute name="retUrl" type="string" required="false" description="Possible return url." />
+  <apex:attribute name="auto" type="boolean" required="false" description="Should this function be called automatically?" default="true" />
+  <script>
+    !function() {
+      function Cookies() {
+        this.cookies = {}
+        this.create = function(key, value, seconds) {
+          var expires = ''
+          if (seconds) {
+            expires = new Date()
+            expires.setTime(expires.getTime() + (parseInt(seconds) * 1000))
+            expires = '; expires=' + expires.toGMTString()
+          }
+          document.cookie = key + '=' + value + expires + '; path=/'
+          this.cookies[key] = value
+        }
+        this.erase = function(key) {
+          var value = this.read(key)
+          this.create(key, '', -1)
+          this.cookies[key] = undefined
+          return value
+        }
+        this.read = function(key) {
+          return this.cookies[key] || null
+        }
+        
+        var i, pair, cookies = document.cookie.split('; ')
+        for (i = 0; i < cookies.length; i++) {
+          pair = cookies[i].split('=')
+          this.cookies[pair[0]] = pair[1]
+        }
+      }
+      var cookies = new Cookies()
+      
+      window.fbookLoginRedirector = function() {
+	      if ({!IF(CONTAINS($User.LastName, 'Site Guest User'), 'true', 'false')}) {
+	        cookies.create('retUrl', encodeURIComponent('{!retUrl}' || window.top.location.href || ''), 60)
+	        return window.top.location.replace('{!loginUrl}')
+	      } else {
+	        var retUrl = cookies.erase('retUrl')
+	        if (retUrl && window.top.location.href != retUrl) {
+	          return window.top.location.replace(decodeURIComponent(retUrl))
+	        }
+	      }
+	    }
+	    
+	    if ({!auto}) fbookLoginRedirector()
+    }()
+  </script>
+</apex:component>
